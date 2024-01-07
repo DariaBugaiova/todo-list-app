@@ -1,0 +1,13 @@
+<mat-card class="list-container">
+    <mat-list class="container">
+        <mat-card *ngFor="let task of tasks" class="mb-10 flex">
+        <mat-list-item class="list-item-container">
+            {{ task.title }}
+        </mat-list-item>
+        <mat-checkbox [checked]="!!task.completed" (click)="editStatus(task)"></mat-checkbox>
+        <span class="material-symbols-outlined" (click)="deleteTask(task)">
+        <mat-icon class="icon mr-10">delete</mat-icon>
+    </span>
+        </mat-card>
+    </mat-list>
+</mat-card>
