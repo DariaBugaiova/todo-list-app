@@ -5,7 +5,7 @@ export class Task {
     title!: string;
     completed!: TaskStatus;
     constructor(title: string, prevId: number) {
-        this.id = prevId + 1 || 1;
+        this.id = prevId + 1;
         this.title = title
         this.completed = TaskStatus.Wait;
     }
