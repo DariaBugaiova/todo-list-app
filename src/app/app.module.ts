@@ -20,6 +20,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TasksService } from './services/task-list.service';
 import { HttpClientModule } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
+import { tasksReducer } from './store/reducer';
+import { AppRoutingModule } from './app-routing.module';
+import { UserReducer } from './store/user/user.reducer';
+import { EffectsModule } from '@ngrx/effects';
+
+import { AppEffects } from './store/common/app.effects';
+import { UserEffect } from './store/user/user.effects';
 
 
 const material = [
@@ -42,17 +50,25 @@ const material = [
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
+    AppRoutingModule,
     FlexModule, 
     FlexLayoutModule,
     FormsModule,
     material,
+    StoreModule.forRoot({
+      "tasks": tasksReducer,
+      user: UserReducer
+    }),
+    EffectsModule.forRoot([ AppEffects, UserEffect ])
   ],
   declarations: [
     AppComponent,
     TaskListComponent,
     AppTaskAddComponent,
   ],
-  providers: [TasksService],
+  providers: [
+    TasksService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

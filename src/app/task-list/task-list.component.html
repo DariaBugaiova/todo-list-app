@@ -1,10 +1,16 @@
+
+<div class="row">
+    <h3 class="m-20">Add new task</h3> 
+    <app-task-add (addTask)="addTask($event)"></app-task-add>
+    <h3 class="m-20">Tasks</h3>
+</div>  
 <mat-card class="list-container">
     <mat-list class="container">
         <mat-card *ngFor="let task of tasks" class="mb-10 flex">
         <mat-list-item class="list-item-container">
             {{ task.title }}
         </mat-list-item>
-        <mat-checkbox [checked]="!!task.completed" (click)="editStatus(task)"></mat-checkbox>
+        <mat-checkbox #t [checked]="!!task.completed" (click)="editStatus(task, t.checked )"></mat-checkbox>
         <span class="material-symbols-outlined" (click)="deleteTask(task)">
         <mat-icon class="icon mr-10">delete</mat-icon>
     </span>

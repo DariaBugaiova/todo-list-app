@@ -15,26 +15,34 @@
      </div>
      <div fxFlex fxLayout fxLayoutAlign="flex-end">
         <ul fxLayout fxLayoutGap="20px" class="navigation-items">
-            <li>
-              <a >
-                  <mat-icon class="icon pr-10">home</mat-icon>
-                  <span class="label">Home</span>
-              </a>
-            </li>
-        </ul>
+              <li *ngIf="isMenuVisible">
+                <a routerLink="auth/login">
+                    <span class="label">Logout</span>
+                </a>
+              </li>
+       
+              <li *ngIf="!isMenuVisible">
+                <a routerLink="auth/login">
+                    <span class="label">Login</span>
+                </a>
+              </li>
+              <li *ngIf="!isMenuVisible">
+                <a>
+                    <span class="label"  routerLink="/auth/signup">Sign up</span>
+                </a>
+              </li>
+         </ul>
      </div>
     </mat-toolbar>
     <main>
       <div class="container">
-        <div class="row">
-          <h3 class="m-20">Add new task</h3>
-          <app-task-add (addTask)="addTask($event)"></app-task-add>
-          <h3 class="m-20">Tasks</h3>
-
-          <app-task-list [tasks]="tasks"></app-task-list>
-        </div>
+          <router-outlet></router-outlet>
       </div>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
 
+
+<a routerLink="/auth">
+  <span class="label">Login</span>
+</a>

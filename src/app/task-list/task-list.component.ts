@@ -1,7 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Task } from 'src/app/model/task';
 import { TaskStatus } from '../model/task-enum';
 import { TasksService } from '../services/task-list.service';
+import { Store } from "@ngrx/store";
+import { actions } from '../store/action';
+import { taskSelector } from '../store/reducer';
+import * as taskActions from "../../app/store/action"
+
 
 @Component({
   selector: 'app-task-list',
@@ -9,36 +14,38 @@ import { TasksService } from '../services/task-list.service';
   styleUrl: './task-list.component.scss'
 })
 export class TaskListComponent implements OnInit {
+tasks: Task[] = [];
 
-@Input() tasks: Task[] | undefined;
-constructor(private tasksService: TasksService){}
+constructor( private store: Store<Task[]> ){}
 
-ngOnInit() {}
+ngOnInit() {
+  this.loadTasks();
+  this.store.select(taskSelector).subscribe(state => this.tasks = state)
+}
 
 // edit task status
-editStatus(task: Task) {
-  console.log('1', task.completed);
-    // task.completed === TaskStatus.Wait ?
-    // task.completed = TaskStatus.Ready : TaskStatus.Wait;
-    task.completed = task.completed == TaskStatus.Wait ? TaskStatus.Ready : TaskStatus.Wait;
-    this.tasksService.updateTaskItem(task).subscribe();
+editStatus(task: Task, flag: boolean) {
+    let updatedTask = {
+      id: task.id, 
+      completed: !!flag, 
+      title: task.title
+    }
+    this.store.dispatch(actions.updateTaskAction(updatedTask)
+    )
   }
 
 // remove task
-deleteTask(task: {id: number}){
-  this.tasksService.deleteTaskItem(task.id).subscribe();
-
-    let index = +(this.tasks?.findIndex(item => item['id'] == task.id) || 0)
-    console.log(index, task);
-    this.tasks?.splice(index, 1)
+deleteTask(task: Task){
+  this.store.dispatch(actions.deleteTaskAction(task));
   }
 
-  // deleteTask(id: number) {
-  //     this.tasksService.deleteTaskItem(id).subscribe(
-  //       task => { 
-  //         let index = this.tasks?.findIndex(item => item.id === task.id ) || 0
-  //         this.tasks?.splice(index, 1)
-  //       }
-  //     );
-  // }
+addTask(task: { title: string; }){
+  this.store.dispatch(taskActions.actions.addTaskAction(
+    new Task(task.title, (this.tasks[this.tasks.length - 1]?.id || 0))
+  ))
+}
+
+loadTasks() {
+  this.store.select(taskSelector).subscribe(state => this.tasks = state)
+ }
 }

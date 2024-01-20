@@ -1,36 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Task } from 'src/app/model/task';
-import { TasksService } from './services/task-list.service';
+import { Store} from "@ngrx/store";
+import { taskSelector } from './store/reducer';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements DoCheck {
   title = 'todo-list-app';
+  isMenuVisible = false;
 
-  tasks!: Task[];
-  constructor(private tasksService: TasksService){
-    this.tasks = [];
-  }
+  constructor(private router: Router, private store: Store) {}
 
-  ngOnInit(): void {
-    this.tasksService.getTaskItems().subscribe((tasks) => {
-      this.tasks = tasks;
-    });
-  }
-
-  addTask(task: { title: string; }){
-    this.tasksService.addTaskItem(new Task(task.title, (this.tasks[this.tasks.length - 1]?.id || 0))).subscribe(task =>
-      this.tasks.push(task));
+  ngDoCheck(): void {
+    const currentroute = this.router.url;
+    if (currentroute === '/auth/login' || currentroute === '/auth/signup') {
+      this.isMenuVisible = false
+    } else {
+      this.isMenuVisible = true;
     }
   }
 
-  // deleteTodo(id) {
-  //   //delete in UI
-  //   this.tasks = this.tasks.filter((t) => t.id !== id);
-  //   //delete in devServerTarget
-  //   this.tasksService
-  //     .deleteTaskItem(id)
-  // }
+}

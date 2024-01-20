@@ -2,8 +2,8 @@ import { TaskStatus } from "./task-enum";
 
 export class Task {
     id: number;
-    title!: string;
-    completed!: TaskStatus;
+    title: string;
+    completed: any;
     constructor(title: string, prevId: number) {
         this.id = prevId + 1;
         this.title = title
